@@ -1,5 +1,7 @@
 # EXS-LanderTrackingChaturbateBundle
 
+[![Build Status](https://travis-ci.org/ExSituMarketing/EXS-LanderTrackingChaturbateBundle.svg)](https://travis-ci.org/ExSituMarketing/EXS-LanderTrackingChaturbateBundle)
+
 ## What is this bundle doing ?
 
 This bundle is not a standalone bundle and requires `EXS-LanderTrackingHouseBundle`.
