@@ -1,0 +1,30 @@
+{
+    "name": "exs/lander-tracking-chaturbate-bundle",
+    "type": "symfony-bundle",
+    "description": "This bundle adds a new Chaturbate's specific extracter and formatter for EXSLanderTrackingChaturbateBundle.",
+    "keywords": ["Symfony2", "bundle", "tracking", "parameter"],
+    "homepage": "https://github.com/ExSituMarketing/EXS-LanderTrackingChaturbateBundle",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Ex-Situ Marketing",
+            "email": "dev@ex-situ.com"
+        }
+    ],
+    "require": {
+        "php": "~5.5|~7.0",
+        "exsitu/exs-landertrackinghousebundle": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": { "EXS\\LanderTrackingChaturbateBundle\\": "" }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
+
