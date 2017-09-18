@@ -20,6 +20,14 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('exs_lander_tracking_chaturbate');
 
+        $rootNode
+            ->children()
+                ->scalarNode('default_cmp')
+                    ->defaultValue(1)
+                ->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }

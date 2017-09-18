@@ -18,15 +18,26 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $request->query = $query;
 
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('cmp')->willReturn(false)->shouldBeCalledTimes(1);
+        $cookies->get('cmp', 1)->willReturn(1)->shouldBeCalledTimes(1);
+        $cookies->get('exid')->willReturn(null)->shouldBeCalledTimes(1);
+        $cookies->get('visit')->willReturn(null)->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;
 
-        $manager = new ChaturbateTrackingParameterManager();
+        $manager = new ChaturbateTrackingParameterManager(1);
 
         $result = $manager->extract($request->reveal());
 
-        $this->assertEmpty($result);
+        $this->assertCount(3, $result);
+
+        $this->assertArrayHasKey('cmp', $result);
+        $this->assertEquals(1, $result['cmp']);
+
+        $this->assertArrayHasKey('exid', $result);
+        $this->assertNull($result['exid']);
+
+        $this->assertArrayHasKey('visit', $result);
+        $this->assertNull($result['visit']);
     }
 
     public function testExtractWithoutParametersButCookies()
@@ -39,14 +50,13 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $request->query = $query;
 
         $cookies = $this->prophesize(ParameterBag::class);
-        $cookies->has('cmp')->willReturn(true)->shouldBeCalledTimes(1);
-        $cookies->get('cmp')->willReturn(123)->shouldBeCalledTimes(1);
-        $cookies->get('exid', null)->willReturn('UUID987654321')->shouldBeCalledTimes(1);
-        $cookies->get('visit', 1)->willReturn('5')->shouldBeCalledTimes(1);
+        $cookies->get('cmp', 1)->willReturn(123)->shouldBeCalledTimes(1);
+        $cookies->get('exid')->willReturn('UUID987654321')->shouldBeCalledTimes(1);
+        $cookies->get('visit')->willReturn('5')->shouldBeCalledTimes(1);
 
         $request->cookies = $cookies;
 
-        $manager = new ChaturbateTrackingParameterManager();
+        $manager = new ChaturbateTrackingParameterManager(1);
 
         $result = $manager->extract($request->reveal());
 
@@ -73,7 +83,7 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $revealedRequest = $request->reveal();
 
-        $manager = new ChaturbateTrackingParameterManager();
+        $manager = new ChaturbateTrackingParameterManager(1);
 
         $result = $manager->extract($revealedRequest);
 
@@ -120,13 +130,13 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
     {
         $trackingParameters = new ParameterBag([]);
 
-        $formatter = new ChaturbateTrackingParameterManager();
+        $formatter = new ChaturbateTrackingParameterManager(1);
 
         $result = $formatter->format($trackingParameters);
 
         $this->assertCount(1, $result);
         $this->assertArrayHasKey('track', $result);
-        $this->assertNull($result['track']);
+        $this->assertEquals('1', $result['track']);
     }
 
     public function testFormatWithAllParameters()
@@ -137,7 +147,7 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
             'visit' => 5,
         ]);
 
-        $formatter = new ChaturbateTrackingParameterManager();
+        $formatter = new ChaturbateTrackingParameterManager(1);
 
         $result = $formatter->format($trackingParameters);
 
@@ -153,7 +163,7 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
             'exid' => 'UUID987654321',
         ]);
 
-        $formatter = new ChaturbateTrackingParameterManager();
+        $formatter = new ChaturbateTrackingParameterManager(1);
 
         $result = $formatter->format($trackingParameters);
 
@@ -168,7 +178,7 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
             'cmp' => 123,
         ]);
 
-        $formatter = new ChaturbateTrackingParameterManager();
+        $formatter = new ChaturbateTrackingParameterManager(1);
 
         $result = $formatter->format($trackingParameters);
 

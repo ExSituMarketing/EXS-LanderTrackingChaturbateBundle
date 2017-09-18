@@ -1,6 +1,8 @@
 services:
     exs_tracking.chaturbate_manager:
         class: 'EXS\LanderTrackingChaturbateBundle\Service\TrackingParameterManager\ChaturbateTrackingParameterManager'
+        arguments:
+            - '%exs_lander_tracking_chaturbate.default_cmp%'
         tags:
             - { name: 'exs_tracking.parameter_extracter' }
             - { name: 'exs_tracking.parameter_formatter' }

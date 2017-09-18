@@ -24,5 +24,7 @@ class EXSLanderTrackingChaturbateExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $container->setParameter('exs_lander_tracking_chaturbate.default_cmp', $config['default_cmp']);
     }
 }

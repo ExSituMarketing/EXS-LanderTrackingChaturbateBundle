@@ -15,6 +15,21 @@ use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParam
 class ChaturbateTrackingParameterManager implements TrackingParameterExtracterInterface, TrackingParameterFormatterInterface
 {
     /**
+     * @var int
+     */
+    private $defaultCmp;
+
+    /**
+     * AweTrackingParameterManager constructor.
+     *
+     * @param $defaultCmp
+     */
+    public function __construct($defaultCmp)
+    {
+        $this->defaultCmp = $defaultCmp;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function extract(Request $request)
@@ -29,10 +44,10 @@ class ChaturbateTrackingParameterManager implements TrackingParameterExtracterIn
             $trackingParameters['cmp'] = $matches['cmp'];
             $trackingParameters['exid'] = isset($matches['exid']) ? $matches['exid'] : null;
             $trackingParameters['visit'] = isset($matches['visit']) ? $matches['visit'] : 1;
-        } elseif ($request->cookies->has('cmp')) {
-            $trackingParameters['cmp'] = $request->cookies->get('cmp');
-            $trackingParameters['exid'] = $request->cookies->get('exid', null);
-            $trackingParameters['visit'] = $request->cookies->get('visit', 1);
+        } else {
+            $trackingParameters['cmp'] = $request->cookies->get('cmp', $this->defaultCmp);
+            $trackingParameters['exid'] = $request->cookies->get('exid');
+            $trackingParameters['visit'] = $request->cookies->get('visit');
         }
 
         return $trackingParameters;
@@ -45,27 +60,23 @@ class ChaturbateTrackingParameterManager implements TrackingParameterExtracterIn
     {
         $track = null;
         if (
-            $trackingParameters->has('cmp')
-            && $trackingParameters->has('exid')
+            $trackingParameters->has('exid')
             && $trackingParameters->has('visit')
         ) {
             $track = sprintf(
                 '%s~%s~%s',
-                $trackingParameters->get('cmp'),
+                $trackingParameters->get('cmp', $this->defaultCmp),
                 $trackingParameters->get('exid'),
                 $trackingParameters->get('visit')
             );
-        } elseif (
-            $trackingParameters->has('cmp')
-            && $trackingParameters->has('exid')
-        ) {
+        } elseif ($trackingParameters->has('exid')) {
             $track = sprintf(
                 '%s~%s~1',
-                $trackingParameters->get('cmp'),
+                $trackingParameters->get('cmp', $this->defaultCmp),
                 $trackingParameters->get('exid')
             );
-        } elseif ($trackingParameters->has('cmp')) {
-            $track = $trackingParameters->get('cmp');
+        } else {
+            $track = $trackingParameters->get('cmp', $this->defaultCmp);
         }
 
         return [
