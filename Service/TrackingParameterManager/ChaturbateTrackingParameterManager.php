@@ -3,16 +3,16 @@
 namespace EXS\LanderTrackingChaturbateBundle\Service\TrackingParameterManager;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
-use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterExtracterInterface;
 use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterFormatterInterface;
+use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterInitializerInterface;
+use EXS\LanderTrackingHouseBundle\Service\TrackingParameterManager\TrackingParameterQueryExtracterInterface;
 
 /**
  * Class ChaturbateTrackingParameterManager
  *
  * @package EXS\LanderTrackingChaturbateBundle\Service\TrackingParameterManager
  */
-class ChaturbateTrackingParameterManager implements TrackingParameterExtracterInterface, TrackingParameterFormatterInterface
+class ChaturbateTrackingParameterManager implements TrackingParameterQueryExtracterInterface, TrackingParameterFormatterInterface, TrackingParameterInitializerInterface
 {
     /**
      * @var int
@@ -32,22 +32,24 @@ class ChaturbateTrackingParameterManager implements TrackingParameterExtracterIn
     /**
      * {@inheritdoc}
      */
-    public function extract(Request $request)
+    public function extractFromQuery(ParameterBag $query)
     {
         $trackingParameters = [];
 
         if (
-            (null !== $track = $request->query->get('track'))
+            (null !== $track = $query->get('track'))
             && (preg_match('`^(?<cmp>[a-z0-9]+)(?:~(?<exid>[a-z0-9]+))?(?:~(?<visit>[0-9]+))?$`i', $track, $matches))
         ) {
             /** Get 'cmp', 'exid' and 'visit' from 'track' query parameter. */
             $trackingParameters['cmp'] = $matches['cmp'];
-            $trackingParameters['exid'] = isset($matches['exid']) ? $matches['exid'] : null;
-            $trackingParameters['visit'] = isset($matches['visit']) ? $matches['visit'] : 1;
-        } else {
-            $trackingParameters['cmp'] = $request->cookies->get('cmp', $this->defaultCmp);
-            $trackingParameters['exid'] = $request->cookies->get('exid');
-            $trackingParameters['visit'] = $request->cookies->get('visit');
+
+            if (true === isset($matches['exid'])) {
+                $trackingParameters['exid'] = $matches['exid'];
+            }
+
+            if (true === isset($matches['visit'])) {
+                $trackingParameters['visit'] = $matches['visit'];
+            }
         }
 
         return $trackingParameters;
@@ -59,28 +61,43 @@ class ChaturbateTrackingParameterManager implements TrackingParameterExtracterIn
     public function format(ParameterBag $trackingParameters)
     {
         $track = null;
+
         if (
-            $trackingParameters->has('exid')
+            $trackingParameters->has('cmp')
+            && $trackingParameters->has('exid')
             && $trackingParameters->has('visit')
         ) {
             $track = sprintf(
                 '%s~%s~%s',
-                $trackingParameters->get('cmp', $this->defaultCmp),
+                $trackingParameters->get('cmp'),
                 $trackingParameters->get('exid'),
                 $trackingParameters->get('visit')
             );
-        } elseif ($trackingParameters->has('exid')) {
+        } elseif (
+            $trackingParameters->has('cmp')
+            && $trackingParameters->has('exid')
+        ) {
             $track = sprintf(
-                '%s~%s~1',
-                $trackingParameters->get('cmp', $this->defaultCmp),
+                '%s~%s',
+                $trackingParameters->get('cmp'),
                 $trackingParameters->get('exid')
             );
-        } else {
-            $track = $trackingParameters->get('cmp', $this->defaultCmp);
+        } elseif ($trackingParameters->has('cmp')) {
+            $track = $trackingParameters->get('cmp');
         }
 
         return [
             'track' => $track,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initialize()
+    {
+        return [
+            'cmp' => $this->defaultCmp,
         ];
     }
 }
