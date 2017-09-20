@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "~5.5|~7.0",
-        "exs/lander-tracking-house-bundle": "dev-master"
+        "exs/lander-tracking-house-bundle": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8"
@@ -27,3 +27,4 @@
         "bin-dir": "bin"
     }
 }
+
