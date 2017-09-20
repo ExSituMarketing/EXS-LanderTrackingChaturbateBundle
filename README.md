@@ -40,13 +40,15 @@ public function registerBundles()
 
 ## Configuration
 
-The `cmp` parameter has a default value configurable with this configuration key : 
+The `cmp` parameter has a default value configurable with this configuration key :
 
 ```yml
 # Default values.
 exs_lander_tracking_chaturbate:
     default_cmp: 1
 ```
+
+This default value will be used over `EXS-LanderTrackingHouseBundle`'s `cmp` default value.
 
 ## Usage
 
