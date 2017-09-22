@@ -19,14 +19,14 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(123, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(123, $result['c']);
 
         $this->assertArrayHasKey('u', $result);
         $this->assertEquals('UUID987654321', $result['u']);
 
-        $this->assertArrayHasKey('visit', $result);
-        $this->assertEquals(5, $result['visit']);
+        $this->assertArrayHasKey('v', $result);
+        $this->assertEquals(5, $result['v']);
 
         $manager = new ChaturbateTrackingParameterManager(1);
 
@@ -34,8 +34,8 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $result);
 
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(123, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(123, $result['c']);
 
         $this->assertArrayHasKey('u', $result);
         $this->assertEquals('UUID987654321', $result['u']);
@@ -46,8 +46,8 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $result);
 
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(123, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(123, $result['c']);
     }
 
     public function testFormatWithEmptyArray()
@@ -66,9 +66,9 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithAllParameters()
     {
         $trackingParameters = new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID987654321',
-            'visit' => 5,
+            'v' => 5,
         ]);
 
         $manager = new ChaturbateTrackingParameterManager(1);
@@ -83,7 +83,7 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithCmpAndExid()
     {
         $trackingParameters = new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
             'u' => 'UUID987654321',
         ]);
 
@@ -99,7 +99,7 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithCmp()
     {
         $trackingParameters = new ParameterBag([
-            'cmp' => 123,
+            'c' => 123,
         ]);
 
         $manager = new ChaturbateTrackingParameterManager(1);
@@ -118,7 +118,7 @@ class ChaturbateTrackingParameterManagerTest extends \PHPUnit_Framework_TestCase
         $result = $manager->initialize();
 
         $this->assertCount(1, $result);
-        $this->assertArrayHasKey('cmp', $result);
-        $this->assertEquals(1, $result['cmp']);
+        $this->assertArrayHasKey('c', $result);
+        $this->assertEquals(1, $result['c']);
     }
 }
