@@ -38,13 +38,13 @@ class ChaturbateTrackingParameterManager implements TrackingParameterQueryExtrac
 
         if (
             (null !== $track = $query->get('track'))
-            && (preg_match('`^(?<cmp>[a-z0-9]+)(?:~(?<exid>[a-z0-9]+))?(?:~(?<visit>[0-9]+))?$`i', $track, $matches))
+            && (preg_match('`^(?<cmp>[a-z0-9]+)(?:~(?<u>[a-z0-9]+))?(?:~(?<visit>[0-9]+))?$`i', $track, $matches))
         ) {
-            /** Get 'cmp', 'exid' and 'visit' from 'track' query parameter. */
+            /** Get 'cmp', 'u' and 'visit' from 'track' query parameter. */
             $trackingParameters['cmp'] = $matches['cmp'];
 
-            if (true === isset($matches['exid'])) {
-                $trackingParameters['exid'] = $matches['exid'];
+            if (true === isset($matches['u'])) {
+                $trackingParameters['u'] = $matches['u'];
             }
 
             if (true === isset($matches['visit'])) {
@@ -64,23 +64,23 @@ class ChaturbateTrackingParameterManager implements TrackingParameterQueryExtrac
 
         if (
             $trackingParameters->has('cmp')
-            && $trackingParameters->has('exid')
+            && $trackingParameters->has('u')
             && $trackingParameters->has('visit')
         ) {
             $track = sprintf(
                 '%s~%s~%s',
                 $trackingParameters->get('cmp'),
-                $trackingParameters->get('exid'),
+                $trackingParameters->get('u'),
                 $trackingParameters->get('visit')
             );
         } elseif (
             $trackingParameters->has('cmp')
-            && $trackingParameters->has('exid')
+            && $trackingParameters->has('u')
         ) {
             $track = sprintf(
                 '%s~%s',
                 $trackingParameters->get('cmp'),
-                $trackingParameters->get('exid')
+                $trackingParameters->get('u')
             );
         } elseif ($trackingParameters->has('cmp')) {
             $track = $trackingParameters->get('cmp');
