@@ -19,7 +19,7 @@ The formatter service will add the parameters if  :
 Download the bundle using composer
 
 ```
-$ composer require exs/lander-tracking-awe-bundle
+$ composer require exs/lander-tracking-chaturbate-bundle
 ```
 
 Enable the bundle
