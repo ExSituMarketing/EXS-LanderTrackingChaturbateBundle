@@ -36,19 +36,18 @@ class ChaturbateTrackingParameterManager implements TrackingParameterQueryExtrac
     {
         $trackingParameters = [];
 
-        if (
-            (null !== $track = $query->get('track'))
-            && (preg_match('`^(?<c>[a-z0-9]+)(?:~(?<u>[a-z0-9]+))?(?:~(?<v>[0-9]+))?$`i', $track, $matches))
-        ) {
-            /** Get 'c', 'u' and 'v' from 'track' query parameter. */
-            $trackingParameters['c'] = $matches['c'];
+        if (null !== $track = $query->get('track')) {
+            $matches = explode('~', $track);
 
-            if (true === isset($matches['u'])) {
-                $trackingParameters['u'] = $matches['u'];
+            /** Get 'c', 'u' and 'v' from 'track' query parameter. */
+            $trackingParameters['c'] = $matches[0];
+
+            if (true === isset($matches[1])) {
+                $trackingParameters['u'] = $matches[1];
             }
 
-            if (true === isset($matches['v'])) {
-                $trackingParameters['v'] = $matches['v'];
+            if (true === isset($matches[2])) {
+                $trackingParameters['v'] = $matches[2];
             }
         }
 
